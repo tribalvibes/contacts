@@ -1,9 +1,9 @@
 source :rubygems
 
-gem 'json', ">= 1.1.1"
+gem 'yajl-ruby', "~> 0.8.0", require: 'yajl'
 gem 'gdata', :platform => [:ruby_18]
-gem 'gdata19', :platform => [:ruby_19]
-gem 'hpricot', '= 0.8.2'
+gem 'gdata_19', ">= 1.1.2", :platform => [:ruby_19]
+gem 'nokogiri', '>= 1.4.4'
 gem 'encryptor'
 gem 'oauth', '>= 0.4.0'
 
@@ -14,7 +14,7 @@ gem "linkedin", :group => :linkedin, :git => "https://github.com/pengwynn/linked
 
 
 group :development do
-  gem 'jeweler'
+#  gem 'jeweler'
 end
 
 group :test do

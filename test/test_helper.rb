@@ -1,6 +1,6 @@
 require 'rubygems'
-require 'bundler/setup'
-
+begin; require 'bundler/setup'; rescue LoadError; end
+  
 Bundler.require(:default, :test) if defined?(Bundler)
 
 dir = File.dirname(__FILE__)
