@@ -5,12 +5,30 @@ require "uri"
 require "zlib"
 require "stringio"
 require "thread"
-require "erb"
+
+# use ActiveSupport::JSON if we can load it, otherwise use Yajl directly unless
+# the JSON gem is already loaded
+begin; require 'active_support/json'; rescue LoadError; end
+begin
+  require 'yajl/json_gem' unless defined?(JSON) || defined?(ActiveSupport::JSON)
+rescue LoadError
+  $stderr.puts('Missing JSON support. Please gem install yajl, active_support or json')
+end
 
 class Contacts
   TYPES = {}
   FILETYPES = {}
   VERSION = "1.4.1"
+
+  if defined? ActiveSupport::JSON
+    def self.parse_json( string )
+        ActiveSupport::JSON.decode( string )
+    end
+  else
+    def self.parse_json( string )
+        JSON.parse( string )
+    end
+  end
 
   class Base
     def initialize(login, password, options={})
