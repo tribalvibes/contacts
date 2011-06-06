@@ -6,7 +6,7 @@ class Contacts
     LOGIN_URL           = "https://my.screenname.aol.com/_cqr/login/login.psp"
     LOGIN_REFERER_URL   = "http://webmail.aol.com/"
     LOGIN_REFERER_PATH = "sitedomain=sns.webmail.aol.com&lang=en&locale=us&authLev=0&uitype=mini&loginId=&redirType=js&xchk=false"
-    AOL_NUM = "29970-343" # this seems to change each time they change the protocol
+  #  AOL_NUM = "29970-343" # this seems to change each time they change the protocol
     
     CONTACT_LIST_URL    = "http://webmail.aol.com/#{AOL_NUM}/aim-2/en-us/Lite/ContactList.aspx?folder=Inbox&showUserFolders=False"
     CONTACT_LIST_CSV_URL = "http://webmail.aol.com/#{AOL_NUM}/aim-2/en-us/Lite/ABExport.aspx?command=all"
@@ -80,7 +80,7 @@ class Contacts
         data, resp, cookies, forward, old_url = get(forward, cookies, old_url) + [forward]
       end
       
-      if data.index("Invalid Username or Password. Please try again.")
+      if data.index("Invalid Username or Password. Please try again.") || data.index("Incorrect Username or Password.")
         raise AuthenticationError, "Username and password do not match"
       elsif data.index("Required field must not be blank")
         raise AuthenticationError, "Login and password must not be blank"
@@ -91,7 +91,11 @@ class Contacts
       elsif cookies == ""
         raise ConnectionError, PROTOCOL_ERROR
       end
- 
+      
+      @aol_num = data.match(/URL=\"http:\/\/mail.aol.com\/(.*)\/aol-6\/en-us\/common\/error.aspx\?/)[1]
+      @contact_list_url    = "http://mail.aol.com/#{@aol_num}/aol-6/en-us/Lite/ContactList.aspx?folder=Inbox&showUserFolders=False"
+      @contact_list_csv_url = "http://mail.aol.com/#{@aol_num}/aol-6/en-us/Lite/ABExport.aspx?command=all"
+
       @cookies = cookies
     end
  
@@ -103,7 +107,7 @@ class Contacts
  
       return @contacts if @contacts
       if connected?
-        data, resp, cookies, forward, old_url = get(CONTACT_LIST_URL, @cookies, CONTACT_LIST_URL) + [CONTACT_LIST_URL]
+        data, resp, cookies, forward, old_url = get(@contact_list_url, @cookies, @contact_list_url) + [@contact_list_url]
  
         until forward.nil?
           data, resp, cookies, forward, old_url = get(forward, cookies, old_url) + [forward]
@@ -118,9 +122,9 @@ class Contacts
         input = doc.css('input[name="user"]').first
         postdata["user"] = input[:value] if input
         
-        data, resp, cookies, forward, old_url = get(CONTACT_LIST_CSV_URL, @cookies, CONTACT_LIST_URL) + [CONTACT_LIST_URL]
- 
-        until forward.nil?
+       data, resp, cookies, forward, old_url = get(@contact_list_csv_url, @cookies, @contact_list_url) + [@contact_list_url]
+
+       until forward.nil?
           data, resp, cookies, forward, old_url = get(forward, cookies, old_url) + [forward]
         end
         

@@ -5,13 +5,13 @@
 
 Gem::Specification.new do |s|
   s.name = %q{contacts}
-  s.version = "2.6.0"
+  s.version = "1.2.7"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
-  s.authors = ["Rob Kaufman"]
+  s.authors = ["Lucas Carlson", "Rob Kaufman"]
   s.date = %q{2011-02-10}
   s.description = %q{A universal interface to grab contact list information from various providers including Outlook, Address Book, Yahoo, AOL, Gmail, Hotmail, and Plaxo.}
-  s.email = %q{rob@notch8.com}
+  s.email = %q{lucas@rufy.com}
   s.extra_rdoc_files = [
     "LICENSE",
     "README"
